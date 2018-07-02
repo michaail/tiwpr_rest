@@ -57,7 +57,7 @@ exports.findOne = (req, res) => {
             });
         }
         return res.status(500).send({
-            message: "Error with activity id: " + req.params.actId
+            message: "Error with get activity id: " + req.params.actId
 
         });
     });
@@ -65,10 +65,49 @@ exports.findOne = (req, res) => {
 
 // Update single object
 exports.update = (req, res) => {
-
+    Activity.findByIdAndUpdate(req.params.actId, {
+        title: req.body.title || title,
+        length: req.body.length || length,
+        duration: req.body.duration || duration,
+        segments: req.body.segments || segments
+    }, {new: true}) // zwracazmodyfikowany dokument do then()
+    .then(activity => {
+        if(!activity) {
+            return res.status(404).send({
+                message: "No activity with id: " + req.params.actId
+            });
+        }
+        res.send(activity);
+    }).catch(err => {
+        if (err.kind === 'ObjectId') {
+            return res.status(404).send({
+                message: "No activity with id: " + req.params.actId
+            });
+        }
+        return res.status(500).send({
+            message: "Error with update activity id: " + req.params.actId
+        });
+    });
 };
 
 // Delete single object
 exports.delete = (req, res) => {
-
+    Activity.findByIdAndRemove(req.params.actId)
+    .then(activity => {
+        if(!activity) {
+            return res.status(404).send({
+                message: "No activity with id: " + req.params.actId
+            });
+        }
+        res.send({message: "Activity deleted!"});
+    }).catch(err => {
+        if (err.kind === 'ObjectId' || err.name === 'NotFound') {
+            return res.status(404).send({
+                message: "No activity with id: " + req.params.actId
+            });
+        }
+        return res.status(500).send({
+            message: "Error with delete activity id: " + req.params.actId
+        });
+    })
 };
