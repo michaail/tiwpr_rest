@@ -23,7 +23,7 @@ exports.create = (req, res) => {
         res.send(data);
     }).catch(err => {
         res.status(500).send({
-            message: err.message || "smth went wrong on creating Note"
+            message: err.message || "smth went wrong on creating activity"
         });
     });
 };
@@ -74,14 +74,14 @@ exports.update = (req, res) => {
     .then(activity => {
         if(!activity) {
             return res.status(404).send({
-                message: "No activity with id: " + req.params.actId
+                message: "user" + req.params.actId
             });
         }
         res.send(activity);
     }).catch(err => {
         if (err.kind === 'ObjectId') {
             return res.status(404).send({
-                message: "No activity with id: " + req.params.actId
+                message: "user" + req.params.actId
             });
         }
         return res.status(500).send({
@@ -96,14 +96,14 @@ exports.delete = (req, res) => {
     .then(activity => {
         if(!activity) {
             return res.status(404).send({
-                message: "No activity with id: " + req.params.actId
+                message: "user" + req.params.actId
             });
         }
         res.send({message: "Activity deleted!"});
     }).catch(err => {
         if (err.kind === 'ObjectId' || err.name === 'NotFound') {
             return res.status(404).send({
-                message: "No activity with id: " + req.params.actId
+                message: "user" + req.params.actId
             });
         }
         return res.status(500).send({

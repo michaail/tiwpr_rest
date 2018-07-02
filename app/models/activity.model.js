@@ -4,7 +4,8 @@ const ActivitySchema = mongose.Schema({
     title: String,
     length: String,
     duration: String,
-    segments: String
+    segments: String,
+    user: mongose.Schema.ObjectId
 }, {
     timestamps: true
 });

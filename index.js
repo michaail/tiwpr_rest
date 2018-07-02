@@ -18,7 +18,9 @@ app.get('/', (req, res) => {
     res.json({"message": "Hello World"});
 });
 
+require('./app/routes/user.routes')(app);
 require('./app/routes/activity.routes')(app);
+
 
 app.listen(3000, () => {
     console.log("Started server on localhost:3000");
