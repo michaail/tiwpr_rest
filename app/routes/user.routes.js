@@ -16,4 +16,12 @@ module.exports = (app) => {
 
     // DELETE - deletes single object
     app.delete('/users/:userId', users.delete);
+
+    // /users/<id>/activities GET, DELETE
+    
+    // GET - get all objects for user
+    app.get('/users/:userId/activities', users.findAllUsersActivities);
+
+    // DELETE - deletes all objects of user
+    app.delete('/users/:userId/activities', users.deleteAllUsersActivities);
 }

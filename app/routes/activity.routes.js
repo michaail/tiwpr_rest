@@ -2,10 +2,10 @@ module.exports = (app) => {
     // controller - methods for handling CRUD ops
     const activities = require('../controllers/activity.controller');
 
-    // POST - create new note
+    // POST - create new object
     app.post('/activities', activities.create);
 
-    // GET - get all notes
+    // GET - get all objects
     app.get('/activities', activities.findAll);
 
     // GET - get single object

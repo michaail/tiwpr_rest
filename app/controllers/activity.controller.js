@@ -1,5 +1,5 @@
 const Activity = require('../models/activity.model');
-
+const User = require('../models/user.model');
 
 // Creates new Activity
 exports.create = (req, res) => {
@@ -14,9 +14,20 @@ exports.create = (req, res) => {
         title: req.body.title || "Activity",
         length: req.body.length,
         duration: req.body.duration || "0:00:00",
-        segments: req.body.segments
+        segments: req.body.segments,
+        author: req.body.user
     });
     
+    User.findById(req.body.user, (err, user) => {
+        if (err) throw new Error(err);
+
+        user.activity.push(activity);
+
+        user.save((err) => {
+            
+        })
+    })
+
     // save what created to db
     activity.save()
     .then(data => {
@@ -31,6 +42,7 @@ exports.create = (req, res) => {
 // Retrieve whole collection from db
 exports.findAll = (req, res) => {
     Activity.find()
+    .populate('user')
     .then(activities => {
         res.send(activities);
     }).catch(err => {

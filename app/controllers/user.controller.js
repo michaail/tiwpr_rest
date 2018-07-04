@@ -111,3 +111,15 @@ exports.delete = (req, res) => {
         });
     })
 };
+
+exports.findAllUsersActivities = (req, res) => {
+    User.findById(req.params.userId)
+    .populate('activity')
+    .exec((err, user) => {
+        res.send(user.activity);
+    });
+};
+
+exports.deleteAllUsersActivities = (req, res) => {
+
+};
