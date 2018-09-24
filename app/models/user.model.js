@@ -1,7 +1,7 @@
 const mongose = require('mongoose');
 
 const UserSchema = mongose.Schema({
-    _id: mongose.Schema.Types.ObjectId,
+    //_id: mongose.Schema.Types.ObjectId,
     name: String,
     email: String,
     bike: String,

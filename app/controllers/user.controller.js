@@ -1,7 +1,8 @@
 const User = require('../models/user.model');
+const Activitiy = require('../models/activity.model');
 
 
-// Creates new Activity
+// Creates new User
 exports.create = (req, res) => {
     if (!req.body.name && !req.body.email) {
         return res.status(400).send({
@@ -65,27 +66,24 @@ exports.findOne = (req, res) => {
 
 // Update single object
 exports.update = (req, res) => {
-    User.findByIdAndUpdate(req.params.userId, {
-        name: req.body.name || name,
-        email: req.body.email || email,
-        bike: req.body.bike || bike,
-        segments: req.body.segments || segments
-    }, {new: true}) // zwracazmodyfikowany dokument do then()
+    User.findByIdAndUpdate(req.params.userId, 
+        req.body,
+        {new: true}) // zwracazmodyfikowany dokument do then()
     .then(user => {
         if(!user) {
             return res.status(404).send({
-                message: "No user with id: " + req.params.actId
+                message: "No user with id: " + req.params.userId
             });
         }
         res.send(user);
     }).catch(err => {
         if (err.kind === 'ObjectId') {
             return res.status(404).send({
-                message: "No user with id: " + req.params.actId
+                message: "No user with id: " + req.params.userId
             });
         }
         return res.status(500).send({
-            message: "Error with update user id: " + req.params.actId
+            message: "Error with update user id: " + req.params.userId
         });
     });
 };
@@ -96,18 +94,26 @@ exports.delete = (req, res) => {
     .then(user => {
         if(!user) {
             return res.status(404).send({
-                message: "No user with id: " + req.params.actId
+                message: "No user with id: " + req.params.userId
             });
         }
+        
+        Activitiy.remove({author: req.params.userId}, (err) =>{
+            if (err) {
+                console.log(err);
+            }
+        });
+        
+
         res.send({message: "User deleted!"});
     }).catch(err => {
         if (err.kind === 'ObjectId' || err.name === 'NotFound') {
             return res.status(404).send({
-                message: "No user with id: " + req.params.actId
+                message: "No user with id: " + req.params.userId
             });
         }
         return res.status(500).send({
-            message: "Error with delete user id: " + req.params.actId
+            message: "Error with delete user id: " + req.params.userId
         });
     })
 };

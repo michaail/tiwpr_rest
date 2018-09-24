@@ -77,12 +77,9 @@ exports.findOne = (req, res) => {
 
 // Update single object
 exports.update = (req, res) => {
-    Activity.findByIdAndUpdate(req.params.actId, {
-        title: req.body.title || title,
-        length: req.body.length || length,
-        duration: req.body.duration || duration,
-        segments: req.body.segments || segments
-    }, {new: true}) // zwracazmodyfikowany dokument do then()
+    Activity.findByIdAndUpdate(req.params.actId, 
+        req.body,
+        {new: true}) // zwracazmodyfikowany dokument do then()
     .then(activity => {
         if(!activity) {
             return res.status(404).send({

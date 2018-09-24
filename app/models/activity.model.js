@@ -5,12 +5,12 @@ const ActivitySchema = mongose.Schema({
     length: String,
     duration: String,
     segments: String,
-    author: [
+    author: 
         {
             type: mongose.Schema.Types.ObjectId,
             ref: 'User'
         }
-    ]
+    
 }, {
     timestamps: true
 });
