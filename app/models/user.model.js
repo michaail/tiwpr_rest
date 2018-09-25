@@ -5,13 +5,14 @@ const UserSchema = mongose.Schema({
     name: String,
     email: String,
     bike: String,
-    segments: String,
-    activity: [
-        {
-            type: mongose.Schema.Types.ObjectId,
-            ref: "Activity"
-        }
-    ]
+    segments: [{
+        type: mongose.Schema.Types.ObjectId,
+        ref: "Segment"
+    }],
+    activity: [{
+        type: mongose.Schema.Types.ObjectId,
+        ref: "Activity"
+    }]
 }, {
     timestamps: true
 });

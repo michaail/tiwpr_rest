@@ -4,7 +4,10 @@ const ActivitySchema = mongose.Schema({
     title: String,
     length: String,
     duration: String,
-    segments: String,
+    segments: [{
+        type: mongose.Schema.Types.ObjectId,
+        ref: 'Segment'
+    }],
     author: 
         {
             type: mongose.Schema.Types.ObjectId,

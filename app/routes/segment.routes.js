@@ -18,7 +18,8 @@ module.exports = (app) => {
     app.delete('/segments/:segId', segments.delete);
 
     // /segments/<id>/users - GET
-
     // GET - get all objects for segment
-    app.get('/segments/:segId/users', segments.findAllSegmentsUsers);
+    app.get('/segments/:segId/users', segments.findAllSegmentUsers);
+
+    app.get('/segments/:segId/activities', segments.findAllActivitiesWithSegment);
 }
