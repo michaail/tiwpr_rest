@@ -11,7 +11,7 @@ exports.create = (req, res) => {
 
   // Create object
   const segment = new Segment({
-    name:    req.body.name    || "unnamed",
+    name:     req.body.name   || "unnamed",
     length:   req.body.length,
     time:     req.body.time   || "0:00:00",
     incline:  req.body.incline,
@@ -33,7 +33,7 @@ exports.create = (req, res) => {
       res.send(data);
     }).catch(err => {
       res.status(500).send({
-        message: err.message || "smth went wrong on creating activity"
+        message: err.message || "smth went wrong on creating segment"
       });
     });
 };
@@ -46,29 +46,29 @@ exports.findAll = (req, res) => {
       res.send(activities);
     }).catch(err => {
       res.status(500).send({
-        message: err.message || "smth went wrong on retrieving activities"
-      })
-    })
+        message: err.message || "smth went wrong on retrieving segments"
+      });
+    });
 };
 
 // Retrieve single object from db
 exports.findOne = (req, res) => {
-  Activity.findById(req.params.actId)
-    .then(activity => {
-      if (!activity) {
+  Segment.findById(req.params.segId)
+    .then(segment => {
+      if (!segment) {
         return res.status(404).send({
-          message: "Activity with id: " + req.params.actId + " not found"
+          message: "Segment with id: " + req.params.segId + " not found"
         });
       }
-      res.send(activity);
+      res.send(segment);
     }).catch(err => {
       if (err.kind === 'ObjectId') {
         return res.status(404).send({
-          message: "Activity with id: " + req.params.actId + " not found"
+          message: "Segment with id: " + req.params.segId + " not found"
         });
       }
       return res.status(500).send({
-        message: "Error with get activity id: " + req.params.actId
+        message: "Error with get segment id: " + req.params.segId
 
       });
     });
@@ -76,46 +76,61 @@ exports.findOne = (req, res) => {
 
 // Update single object
 exports.update = (req, res) => {
-  Activity.findByIdAndUpdate(req.params.actId, 
+  Segment.findByIdAndUpdate(req.params.segId, 
                              req.body,
                              {new: true})
-    .then(activity => {
-      if(!activity) {
+    .then(segment => {
+      if(!segment) {
         return res.status(404).send({
-          message: "user" + req.params.actId
+          message: "segment " + req.params.segId
         });
       }
-      res.send(activity);
+      res.send(segment);
     }).catch(err => {
       if (err.kind === 'ObjectId') {
         return res.status(404).send({
-          message: "user" + req.params.actId
+          message: "segment " + req.params.segId
         });
       }
       return res.status(500).send({
-        message: "Error with update activity id: " + req.params.actId
+        message: "Error with update segment id: " + req.params.segId
       });
     });
 };
 
 // Delete single object
 exports.delete = (req, res) => {
-  Activity.findByIdAndRemove(req.params.actId)
-    .then(activity => {
-      if(!activity) {
+  Segment.findByIdAndRemove(req.params.segId)
+    .then(segment => {
+      if(!segment) {
         return res.status(404).send({
-          message: "user" + req.params.actId
+          message: "segment" + req.params.segId
         });
       }
-      res.send({message: "Activity deleted!"});
+      res.send({message: "Segment deleted!"});
     }).catch(err => {
       if (err.kind === 'ObjectId' || err.name === 'NotFound') {
         return res.status(404).send({
-          message: "user" + req.params.actId
+          message: "segment" + req.params.segId
         });
       }
       return res.status(500).send({
-        message: "Error with delete activity id: " + req.params.actId
+        message: "Error with delete activity id: " + req.params.segId
       });
     });
 };
+
+
+exports.findAllSegmentUsers = (req, res) => {
+  Segment.findById(req.params.segId)
+    .then(segment =>{
+      if (!segment) {
+        return res.status(404).send({
+          message: "segment " + req.params.segId
+        })
+      }
+    }).catch(err => {
+
+    });
+}
+
