@@ -20,6 +20,7 @@ app.get('/', (req, res) => {
 
 require('./app/routes/activity.routes')(app);
 require('./app/routes/user.routes')(app);
+require('./app/routes/segment.routes')(app);
 
 
 

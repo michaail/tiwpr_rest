@@ -22,13 +22,13 @@ exports.create = (req, res) => {
     User.findById(req.body.user, (err, user) => {
       if (err) throw new Error(err);
 
-      user.segments.push(activity);
+      user.segments.push(segment);
       user.save((err) => { });
     });
   }
   
   // save what created to db
-  activity.save()
+  segment.save()
     .then(data => {
       res.send(data);
     }).catch(err => {
@@ -40,10 +40,10 @@ exports.create = (req, res) => {
 
 // Retrieve whole collection from db
 exports.findAll = (req, res) => {
-  Activity.find()
-    .populate('user')
-    .then(activities => {
-      res.send(activities);
+  Segment.find()
+    .populate('segment')
+    .then(segments => {
+      res.send(segments);
     }).catch(err => {
       res.status(500).send({
         message: err.message || "smth went wrong on retrieving segments"
@@ -123,12 +123,41 @@ exports.delete = (req, res) => {
 
 exports.findAllSegmentUsers = (req, res) => {
   Segment.findById(req.params.segId)
-    .then(segment =>{
+    .then(segment => {
       if (!segment) {
         return res.status(404).send({
           message: "segment " + req.params.segId
         })
       }
+
+      User.find({segments: req.params.segId})
+        .then(users => {
+          if (!users) {
+            return res.status(404).send({
+              message: "users with segment: " + req.params.segId
+            });
+          }
+          res.send(users)
+        });
+
+    }).catch(err => {
+      res.status(500).send({
+        message: err.message || "smth went wrong on retrieving segments"
+      });
+    });
+}
+
+exports.findAllActivitiesWithSegment = (req, res) => {
+  Segment.findById(req.params.segId)
+    .then(segment => {
+      if (!segment) {
+        return res.status(404).send({
+          message: "segment " + req.params.segId
+        });
+      }
+      
+
+
     }).catch(err => {
 
     });
