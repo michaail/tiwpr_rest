@@ -30,15 +30,27 @@ exports.create = (req, res) => {
 };
 
 // Retrieve whole collection from db
-exports.findAll = (req, res) => {
-    User.find()
-    .then(users => {
-        res.send(users);
-    }).catch(err => {
-        res.status(500).send({
-            message: err.message || "smth went wrong on retrieving users"
-        })
-    })
+exports.findAll = async (req, res) => {
+    const userPromise = User.paginate({
+        limit: req.query.per_page || 3,
+        previous: req.query.previous || null,
+        next: req.query.next || null
+      });
+      const countPromise = User.count();
+      const [users, count] = await Promise.all([userPromise, countPromise]);
+      
+      const links = {};
+      if (users.hasNext) {
+        links.next = `${req.protocol}://${req.get('host')}${req.path}?next=${users.next}`;
+      }
+      if (users.hasPrevious) {
+        links.previous = `${req.protocol}://${req.get('host')}${req.path}?previous=${users.next}`;
+      }
+      res.links(links);
+      res.set('total-count', count);
+      
+      return res.status(200).send(users.results );
+
 };
 
 // Retrieve single object from db

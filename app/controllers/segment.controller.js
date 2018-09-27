@@ -39,16 +39,26 @@ exports.create = (req, res) => {
 };
 
 // Retrieve whole collection from db
-exports.findAll = (req, res) => {
-  Segment.find()
-    .populate('segment')
-    .then(segments => {
-      res.send(segments);
-    }).catch(err => {
-      res.status(500).send({
-        message: err.message || "smth went wrong on retrieving segments"
-      });
-    });
+exports.findAll = async (req, res) => {
+  const segmentPromise = Segment.paginate({
+    limit: req.query.per_page || 2,
+    previous: req.query.previous || null,
+    next: req.query.next || null
+  });
+  const countPromise = Segment.count();
+  const [segments, count] = await Promise.all([segmentPromise, countPromise]);
+  
+  const links = {};
+  if (segments.hasNext) {
+    links.next = `${req.protocol}://${req.get('host')}${req.path}?next=${segments.next}`;
+  }
+  if (segments.hasPrevious) {
+    links.previous = `${req.protocol}://${req.get('host')}${req.path}?previous=${segments.next}`;
+  }
+  res.links(links);
+  res.set('total-count', count);
+  
+  return res.status(200).send(segments.results );
 };
 
 // Retrieve single object from db

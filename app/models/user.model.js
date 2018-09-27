@@ -1,4 +1,5 @@
 const mongose = require('mongoose');
+const mongoPagination = require('mongo-cursor-pagination');
 
 const UserSchema = mongose.Schema({
     //_id: mongose.Schema.Types.ObjectId,
@@ -16,5 +17,7 @@ const UserSchema = mongose.Schema({
 }, {
     timestamps: true
 });
+
+UserSchema.plugin(mongoPagination.mongoosePlugin);
 
 module.exports = mongose.model('User', UserSchema);

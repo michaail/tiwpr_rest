@@ -1,4 +1,5 @@
 const mongose = require('mongoose');
+const mongoPagination = require('mongo-cursor-pagination');
 
 const ActivitySchema = mongose.Schema({
     title: String,
@@ -17,5 +18,7 @@ const ActivitySchema = mongose.Schema({
 }, {
     timestamps: true
 });
+
+ActivitySchema.plugin(mongoPagination.mongoosePlugin);
 
 module.exports = mongose.model('Activity', ActivitySchema);

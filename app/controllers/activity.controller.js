@@ -40,16 +40,27 @@ exports.create = (req, res) => {
 };
 
 // Retrieve whole collection from db
-exports.findAll = (req, res) => {
-    Activity.find()
-    .populate('user')
-    .then(activities => {
-        res.send(activities);
-    }).catch(err => {
-        res.status(500).send({
-            message: err.message || "smth went wrong on retrieving activities"
-        })
-    })
+exports.findAll = async (req, res) => {
+    const activityPromise = Activity.paginate({
+        limit: req.query.per_page || 3,
+        previous: req.query.previous || null,
+        next: req.query.next || null
+      });
+      const countPromise = Activity.count();
+      const [activities, count] = await Promise.all([activityPromise, countPromise]);
+      
+      const links = {};
+      if (activities.hasNext) {
+        links.next = `${req.protocol}://${req.get('host')}${req.path}?next=${activities.next}`;
+      }
+      if (activities.hasPrevious) {
+        links.previous = `${req.protocol}://${req.get('host')}${req.path}?previous=${activities.next}`;
+      }
+      res.links(links);
+      res.set('total-count', count);
+      
+      return res.status(200).send(activities.results );
+
 };
 
 // Retrieve single object from db

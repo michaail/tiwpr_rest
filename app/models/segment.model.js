@@ -1,4 +1,5 @@
 const mongose = require('mongoose');
+const mongoPagination = require('mongo-cursor-pagination');
 
 const SegmentSchema = mongose.Schema({
     name: String,
@@ -13,5 +14,7 @@ const SegmentSchema = mongose.Schema({
 }, {
     timestamps: true
 });
+
+SegmentSchema.plugin(mongoPagination.mongoosePlugin);
 
 module.exports = mongose.model('Segment', SegmentSchema);
